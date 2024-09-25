@@ -14,7 +14,7 @@
                             <th>User Type</th>
                             <th>UUID</th>
                             <th>State</th>
-                            <th>Time In</th>
+                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,7 +24,7 @@
                                 <td>{{ $log->user_type }}</td>
                                 <td>{{ $log->uuid }}</td>
                                 <td>{{ $log->state }}</td>
-                                <td>{{ $log->time_in }}</td>
+                                <td>{{ $log->time }}</td>
                             </tr>
                         @endforeach
                     </tbody>

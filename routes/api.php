@@ -20,7 +20,7 @@ use App\Http\Controllers\AuthController;
 // });
 
 // Sign in
-Route::post('/check-in', [AuthController::class, 'checkIn']);
+Route::get('/check-in', [AuthController::class, 'checkIn']);
 
 // Sign out
-Route::post('/check-out', [AuthController::class, 'checkOut']);
+Route::get('/check-out', [AuthController::class, 'checkOut']);
