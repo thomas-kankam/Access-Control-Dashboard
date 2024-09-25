@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Log;
+use App\Models\Logs;
 use App\Models\Code;
 use App\Models\User;
 use App\Models\Staff;
@@ -18,7 +18,7 @@ class DashboardController extends Controller
         $staff_count = Staff::count() ?? 0;
         $users_count = User::count() ?? 0;
         $uuid_count = Code::count() ?? 0;
-        $logs = Log::all();
+        $logs = Logs::all();
         return view('dashboard.index', compact('student_count', 'staff_count', 'users_count', 'uuid_count', 'logs'));
     }
 
@@ -30,7 +30,8 @@ class DashboardController extends Controller
 
     public function logs()
     {
-        $logs = Log::all();
+        $logs = Logs::orderBy('id','asc')->get();
+    
         return view('logs.index', compact('logs'));
     }
 

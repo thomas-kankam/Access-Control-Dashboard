@@ -18,6 +18,14 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function deleteStaff(id) {
+            var form = document.getElementById('deleteStaff');
+            form.action = '/staff/' + id
+            $('#deleteModal').modal('show')
+        }
+    </script>
     @include('partials.script')
 </body>
 

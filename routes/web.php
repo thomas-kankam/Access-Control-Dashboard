@@ -46,6 +46,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Staffs
     Route::get('staffs', [UserController::class, "getStaffs"])->name("get.staffs");
+    Route::get('staffs/{staff}/edit', [UserController::class, "editStaff"])->name("edit.staff");
+    Route::delete('staff/{staff} ', [UserController::class, "destroyStaff"])->name("destroy.staff");
+    Route::put('staff/{staff}', [UserController::class, "updateStaff"])->name("update.staff");
+
     Route::post('save/staff', [UserController::class, "saveStaff"])->name("save.staff");
 
     // // feedback

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Staff;
+use App\Models\Client;
+use App\Models\Logs;
+use App\Models\Student;
 
 class AuthController extends Controller
 {
@@ -41,6 +45,94 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::channel('login')->error('LOGIN_ERROR: ' . $e->getMessage() . ' - at timestamp -> ' . date('Y-m-d H:i:s'));
             return redirect()->back()->with('error', 'Sorry, the sign-in process encountered a problem!');
+        }
+    }
+
+    public function checkIn(Request $request)
+    {
+        $uuid = $request->input('uuid'); // Retrieve UUID from the POST request payload
+
+        Log::channel('check_in_logs')->info("UUID value is: " . $uuid);
+
+        $user = Student::where('uuid', $uuid)->first();
+
+        if (!$user) {
+            $user = Staff::where('uuid', $uuid)->first();
+        }
+
+        if ($user) {
+            Log::channel('check_in_logs')->info("User " . $user->full_name . " scanned card", [
+                "full_name" => $user->full_name,
+                "uuid" => $uuid,
+                "user_type" => $user->user_type,
+                "state" => $user->state,
+                "time_in" => now()
+            ]);
+
+            Logs::create(
+                [
+                    "full_name" => $user->full_name,
+                    "uuid" => $uuid,
+                    "user_type" => $user->user_type,
+                    "state" => 'in',
+                    "time_in" => now()
+                ]
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Authorized access',
+                'user' => $user->full_name,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Access denied',
+            ]);
+        }
+    }
+
+    public function checkOut(Request $request)
+    {
+        $uuid = $request->input('uuid'); // Retrieve UUID from the POST request payload
+
+        Log::channel('check_out_logs')->info("UUID value is: " . $uuid);
+
+        $user = Student::where('uuid', $uuid)->first();
+
+        if (!$user) {
+            $user = Staff::where('uuid', $uuid)->first();
+        }
+
+        if ($user) {
+            Log::channel('check_out_logs')->info("User " . $user->full_name . " scanned card", [
+                "full_name" => $user->full_name,
+                "uuid" => $uuid,
+                "user_type" => $user->user_type,
+                "state" => $user->state,
+                "time_out" => now()
+            ]);
+
+            Logs::create(
+                [
+                    "full_name" => $user->full_name,
+                    "uuid" => $uuid,
+                    "user_type" => $user->user_type,
+                    "state" => 'out',
+                    "time_in" => now()
+                ]
+            );
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Authorized access',
+                'user' => $user->full_name,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Access denied',
+            ]);
         }
     }
 

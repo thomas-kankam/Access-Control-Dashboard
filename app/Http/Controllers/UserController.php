@@ -26,12 +26,65 @@ class UserController extends Controller
         return view('staffs.index', compact('staffs', 'codes'));
     }
 
+    public function editStaff($id)
+    {
+        $staff = Staff::find($id);
+        $codes = Code::where('status', 'inactive')->get();
+        return view('staffs.edit', compact('staff', 'codes'));
+    }
+
+    public function updateStaff(Staff $staff, Request $request)
+    {
+        // Validation rules
+        $rules = [
+            'full_name' => 'nullable|string',
+            'email' => 'nullable|email|unique:staff,email,' . $staff->id, // Allow the same email for the current staff
+            'uuid' => 'nullable|string',
+            'msisdn' => 'nullable|string',
+        ];
+
+        // Validate the input
+        $validation = Validator::make($request->all(), $rules);
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validation)->withInput();
+        }
+
+        // Update staff details if provided
+        $staff->update([
+            'full_name' => $request->full_name ?? $staff->full_name,
+            'email' => $request->email ?? $staff->email,
+            'uuid' => $request->uuid ?? $staff->uuid,
+            'msisdn' => $request->msisdn ?? $staff->msisdn
+        ]);
+
+        // If UUID is provided, update the related code's status
+        if ($request->uuid) {
+            DB::table('codes')->where(['uuid' => $request->uuid])->update([
+                'status' => "active", // Example field update
+                'updated_at' => now(), // Example field update
+            ]);
+        }
+
+        // Redirect back to the staff list with a success message
+        return redirect()->route('get.staffs')->with('success', "Successfully updated staff details");
+    }
+
+
+    public function destroyStaff(Staff $staff)
+    {
+        // $user->smsLogs()->delete();
+        $staff->delete();
+
+        return redirect(route('get.staffs'))->with("success", "Staff deleted successfully");
+    }
+
     public function saveStaff(Request $request)
     {
         $rules = [
-            'full_name' => 'required|string',
-            'email' => 'required|email|unique:staff,email',
-            'uuid' => 'required|string',
+            'full_name' => 'nullable|string',
+            'email' => 'nullable|email|unique:staff,email',
+            'uuid' => 'nullable|string',
+            'msisdn' => 'nullable|string',
         ];
 
         $validation = Validator::make($request->all(), $rules);
@@ -43,6 +96,7 @@ class UserController extends Controller
             'full_name' => $request->full_name,
             'email' => $request->email,
             'uuid' => $request->uuid,
+            'msisdn' => $request->msisdn
         ]);
 
         DB::table('codes')->where(['uuid' => $request->uuid])->update([

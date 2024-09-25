@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('uuid');
-            $table->string('message');
-            $table->timestamp('time_in')->nullable();
-            $table->timestamp('time_out')->nullable();
+            $table->string('user_type');
+            $table->string('state');
+            $table->timestamp('time')->nullable();
             $table->timestamps();
         });
     }

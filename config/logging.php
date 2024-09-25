@@ -129,6 +129,30 @@ return [
             'path' => storage_path('logs/logout.log'),
             'level' => 'info',
         ],
+
+        'user_scanned_uuid' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/user_scanned_uuid.log'),
+            'level' => 'info',
+        ],
+
+        'scan_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/scan_logs.log'),
+            'level' => 'info',
+        ],
+
+        'check_out_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/check_out_logs.log'),
+            'level' => 'info',
+        ],
+
+        'check_in_logs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/check_in_logs.log'),
+            'level' => 'info',
+        ],
     ],
 
 ];

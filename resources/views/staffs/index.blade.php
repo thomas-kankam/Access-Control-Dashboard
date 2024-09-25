@@ -52,18 +52,31 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Contact</th>
                             <th>Email</th>
                             <th>UUID</th>
                             <th>Created At</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($staffs as $staff)
                             <tr>
                                 <td>{{ $staff->full_name }}</td>
+                                <td>{{ $staff->msisdn }}</td>
                                 <td>{{ $staff->email }}</td>
                                 <td>{{ $staff->uuid }}</td>
                                 <td>{{ $staff->created_at }}</td>
+                                <td class="d-flex justify-content-start align-items-start">
+                                    <a href="{{ route('edit.staff', $staff->id) }}" class="me-2 text-warning">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{{ route('destroy.staff', $staff->id) }}" class="text-danger"
+                                        onclick="deleteStaff({{ $staff->id }})" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -99,6 +112,11 @@
                                         value="{{ old('full_name') }}" placeholder="Enter your full name here" />
                                 </div>
                                 <div class="mb-3">
+                                    <label for="msisdn" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="msisdn" name="msisdn"
+                                        value="{{ old('msisdn') }}" placeholder="Enter your phone number here" />
+                                </div>
+                                <div class="mb-3">
                                     <label for="rfid" class="form-label">Available RFIDs</label>
                                     <select class="form-control @error('code_id') is-invalid @enderror" id="rfid"
                                         name="uuid" aria-describedby="rfidHelp">
@@ -130,6 +148,36 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Danger Header Modal -->
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="" method="POST" id="deleteStaff">
+                @csrf
+                @method('DELETE')
+
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h4 class="modal-title" id="danger-header-modalLabel">Confirm Delete</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-hidden="true"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="text-bold">
+                            Are you sure you want to delete this record ?
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 @endsection

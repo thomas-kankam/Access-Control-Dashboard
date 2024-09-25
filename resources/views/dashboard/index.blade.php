@@ -76,19 +76,20 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email</th>
+                            <th>User Type</th>
                             <th>UUID</th>
-                            <th>Created At</th>
+                            <th>State</th>
+                            <th>Time In</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($logs as $log)
                             <tr>
                                 <td>{{ $log->full_name }}</td>
+                                <td>{{ $log->user_type }}</td>
                                 <td>{{ $log->uuid }}</td>
-                                <td>{{ $log->message }}</td>
+                                <td>{{ $log->state }}</td>
                                 <td>{{ $log->time_in }}</td>
-                                <td>{{ $log->time_out }}</td>
                             </tr>
                         @endforeach
                     </tbody>

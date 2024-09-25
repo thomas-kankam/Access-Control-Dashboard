@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Log extends Model
+class Logs extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'full_name',
+        'user_type',
         'uuid',
-        'message',
-        'time_in',
-        'time_out'
+        'state',
+        'time',
     ];
 }

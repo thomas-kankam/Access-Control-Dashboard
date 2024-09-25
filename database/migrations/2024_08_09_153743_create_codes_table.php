@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('codes', function (Blueprint $table) {
             $table->id();
             $table->string('uuid');
-            $table->string('status');
+            $table->string('status')->nullable();
+            $table->string('missing')->nullable();
             $table->timestamps();
         });
     }

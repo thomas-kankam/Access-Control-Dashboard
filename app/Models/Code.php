@@ -9,5 +9,5 @@ class Code extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['uuid', 'status'];
+    protected $fillable = ['uuid', 'status', 'missing'];
 }
