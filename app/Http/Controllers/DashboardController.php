@@ -30,8 +30,8 @@ class DashboardController extends Controller
 
     public function logs()
     {
-        $logs = Logs::orderBy('id','asc')->get();
-    
+        $logs = Logs::orderBy('id', 'asc')->get();
+
         return view('logs.index', compact('logs'));
     }
 
@@ -58,6 +58,7 @@ class DashboardController extends Controller
     {
         $code = Code::find($id);
         $code->uuid = $request->uuid;
+        $code->status = $request->status;
         $code->save();
 
         return redirect()->route('settings.index')->with('success', "Successfully updated status");

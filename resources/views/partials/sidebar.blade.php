@@ -66,7 +66,7 @@
             <span class="menu-header-text" data-i18n="Account">Account</span>
         </li>
         <li class="menu-item">
-            <a href="{{ route('users.index') }}" class="menu-link">
+            <a href="{{ route('get.users') }}" class="menu-link">
                 <i class="menu-icon fa-solid fa-user"></i>
                 <div class="text-truncate" data-i18n="Users">Users</div>
             </a>

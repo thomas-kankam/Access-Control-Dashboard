@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use App\Models\Code;
+use App\Models\Logs;
 use App\Models\Staff;
 use App\Models\Client;
-use App\Models\Logs;
 use App\Models\Student;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -51,24 +52,26 @@ class AuthController extends Controller
     public function checkIn(Request $request)
     {
         $uuid = $request->input('uuid'); // Retrieve UUID from the GET request
-    
+
         Log::channel('check_in_logs')->info("UUID value is: " . $uuid);
-    
-        $user = Student::where('uuid', $uuid)->first();
-    
+
+        $code_id = Code::where('uuid', $uuid)->value('id');
+
+        $user = Student::where('code_id', $code_id)->first();
+
         if (!$user) {
-            $user = Staff::where('uuid', $uuid)->first();
+            $user = Staff::where('code_id', $code_id)->first();
         }
-    
+
         if ($user) {
             Log::channel('check_in_logs')->info("User " . $user->full_name . " scanned card", [
                 "full_name" => $user->full_name,
                 "uuid" => $uuid,
                 "user_type" => $user->user_type,
-                "state" => "in",
-                "time_in" => now()
+                "state" => 'in',
+                "time" => now()
             ]);
-    
+
             Logs::create(
                 [
                     "full_name" => $user->full_name,
@@ -78,7 +81,7 @@ class AuthController extends Controller
                     "time" => now()
                 ]
             );
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Authorized access',
@@ -91,28 +94,30 @@ class AuthController extends Controller
             ]);
         }
     }
-    
+
     public function checkOut(Request $request)
     {
         $uuid = $request->input('uuid'); // Retrieve UUID from the GET request
-    
+
         Log::channel('check_out_logs')->info("UUID value is: " . $uuid);
-    
-        $user = Student::where('uuid', $uuid)->first();
-    
+
+        $code_id = Code::where('uuid', $uuid)->value('id');
+
+        $user = Student::where('code_id', $code_id)->first();
+
         if (!$user) {
-            $user = Staff::where('uuid', $uuid)->first();
+            $user = Staff::where('code_id', $code_id)->first();
         }
-    
+
         if ($user) {
             Log::channel('check_out_logs')->info("User " . $user->full_name . " scanned card", [
                 "full_name" => $user->full_name,
                 "uuid" => $uuid,
                 "user_type" => $user->user_type,
-                "state" => "out",
+                "state" => 'out',
                 "time" => now()
             ]);
-    
+
             Logs::create(
                 [
                     "full_name" => $user->full_name,
@@ -122,7 +127,7 @@ class AuthController extends Controller
                     "time" => now()
                 ]
             );
-    
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Authorized access',
@@ -135,7 +140,7 @@ class AuthController extends Controller
             ]);
         }
     }
-    
+
 
     public function logout()
     {

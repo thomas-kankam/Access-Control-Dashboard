@@ -65,7 +65,7 @@
                                 <td>{{ $staff->full_name }}</td>
                                 <td>{{ $staff->msisdn }}</td>
                                 <td>{{ $staff->email }}</td>
-                                <td>{{ $staff->uuid }}</td>
+                                <td>{{ $staff->uuid->uuid ?? 'N/A' }}</td>
                                 <td>{{ $staff->created_at }}</td>
                                 <td class="d-flex justify-content-start align-items-start">
                                     <a href="{{ route('edit.staff', $staff->id) }}" class="me-2 text-warning">
@@ -119,16 +119,16 @@
                                 <div class="mb-3">
                                     <label for="rfid" class="form-label">Available RFIDs</label>
                                     <select class="form-control @error('code_id') is-invalid @enderror" id="rfid"
-                                        name="uuid" aria-describedby="rfidHelp">
+                                        name="code_id" aria-describedby="rfidHelp">
                                         <option value="" disabled selected>Select RFID and assign to staff</option>
                                         @foreach ($codes as $code)
-                                            <option value="{{ $code->uuid }}"
-                                                {{ old('uuid') == $code->uuid ? 'selected' : '' }}>
+                                            <option value="{{ $code->id }}"
+                                                {{ old('code_id') == $code->id ? 'selected' : '' }}>
                                                 {{ $code->uuid }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('uuid')
+                                    @error('code_id')
                                         <div id="rfidHelp" class="invalid-feedback">
                                             {{ $message }}
                                         </div>

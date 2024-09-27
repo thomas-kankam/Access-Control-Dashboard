@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('uuid');
             $table->string('status')->nullable();
-            $table->string('missing')->nullable();
             $table->timestamps();
         });
     }

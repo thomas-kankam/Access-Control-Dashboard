@@ -65,18 +65,25 @@
                                 <td>
                                     @if ($rfid->status == 'active')
                                         <span class="badge bg-success">Active</span>
-                                    @else
-                                        <span class="badge bg-danger">Inactive</span>
+                                    @elseif ($rfid->status == 'missing')
+                                        <span class="badge bg-danger">Missing</span>
+                                    @elseif ($rfid->status == 'inactive')
+                                        <span class="badge bg-warning">Inactive</span>
+                                        <!-- Changed from Active to Inactive -->
                                     @endif
                                 </td>
                                 <td>{{ $rfid->created_at }}</td>
                                 <td>
                                     <!-- Button to trigger the modal -->
                                     <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                        data-bs-target="#editRfid{{ $rfid->id }}">
+                                        Edit
+                                    </button>
+                                    {{-- <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#editRfid{{ $rfid->id }}"
                                         @if ($rfid->status == 'active') disabled @endif>
                                         Edit
-                                    </button>
+                                    </button> --}}
                                 </td>
                             </tr>
 
@@ -97,19 +104,37 @@
                                                 action="{{ route('settings.update', $rfid->id) }}">
                                                 @csrf
                                                 @method('PUT') <!-- Specify the method as PUT -->
+
                                                 <div class="col-12">
                                                     <div class="row">
+                                                        <!-- UUID Field -->
                                                         <div class="mb-3">
                                                             <label for="uuid" class="form-label">UUID</label>
                                                             <input type="text" class="form-control" id="uuid"
-                                                                name="uuid" value="{{ $rfid->uuid }}"
+                                                                name="uuid" value="{{ old('uuid', $rfid->uuid) }}"
                                                                 placeholder="Enter your uuid here" />
                                                         </div>
 
+                                                        <!-- Status Field -->
+                                                        <div class="mb-3">
+                                                            <label for="status" class="form-label">Status</label>
+                                                            <select class="form-control" id="status" name="status">
+                                                                <option value="active"
+                                                                    {{ old('status', $rfid->status) == 'active' ? 'selected' : '' }}>
+                                                                    Active</option>
+                                                                <option value="inactive"
+                                                                    {{ old('status', $rfid->status) == 'inactive' ? 'selected' : '' }}>
+                                                                    Inactive</option>
+                                                                <option value="missing"
+                                                                    {{ old('status', $rfid->status) == 'missing' ? 'selected' : '' }}>
+                                                                    Missing</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Buttons -->
                                                         <div class="col-12 text-center">
-                                                            <button type="submit" class="btn btn-primary me-sm-3 me-1">
-                                                                Proceed
-                                                            </button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary me-sm-3 me-1">Proceed</button>
                                                             <button type="reset" class="btn btn-label-secondary"
                                                                 data-bs-dismiss="modal" aria-label="Close">
                                                                 Cancel
@@ -118,13 +143,13 @@
                                                     </div>
                                                 </div>
                                             </form>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         @endforeach
                     </tbody>
-
                 </table>
             </div>
         </div>

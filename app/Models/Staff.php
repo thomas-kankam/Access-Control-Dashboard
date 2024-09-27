@@ -13,6 +13,12 @@ class Staff extends Model
         'email',
         'msisdn',
         'full_name',
-        'uuid'
+        'code_id',
+        'user_type'
     ];
+
+    public function uuid()
+    {
+        return $this->belongsTo(Code::class, 'code_id');
+    }
 }

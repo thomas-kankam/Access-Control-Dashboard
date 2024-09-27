@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('msisdn')->nullable();
             $table->string('full_name')->nullable();
             $table->string('user_type')->default('staff');
-            $table->string('uuid')->nullable();
+            $table->string('code_id')->nullable();
             $table->timestamps();
         });
     }

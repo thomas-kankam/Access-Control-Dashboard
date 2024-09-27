@@ -25,6 +25,18 @@
             form.action = '/staff/' + id
             $('#deleteModal').modal('show')
         }
+
+        function deleteStudent(id) {
+            var form = document.getElementById('deleteStudent');
+            form.action = '/student/' + id
+            $('#deleteModal').modal('show')
+        }
+
+        function deleteUser(id) {
+            var form = document.getElementById('deleteUser');
+            form.action = '/user/' + id
+            $('#deleteModal').modal('show')
+        }
     </script>
     @include('partials.script')
 </body>

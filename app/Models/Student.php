@@ -14,6 +14,13 @@ class Student extends Model
         'msisdn',
         'full_name',
         'index_no',
-        'uuid'
+        'code_id',
+        'user_type'
     ];
+
+    public function uuid()
+    {
+        return $this->belongsTo(Code::class, 'code_id');
+    }
 }
+x

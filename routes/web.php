@@ -37,12 +37,13 @@ Route::group(['middleware' => ['auth']], function () {
     // // leads
     Route::get('logs', [DashboardController::class, 'logs'])->name('logs');
 
-    // // Download upload content template
-    // Route::get("download/contact-template", [ContentController::class, "download_contact_template"])->name("contact.template");
-
     // Students
     Route::get('students', [UserController::class, "getStudents"])->name("get.students");
     Route::post('save/student', [UserController::class, "saveStudent"])->name("save.student");
+
+    Route::get('students/{student}/edit', [UserController::class, "editStudent"])->name("edit.student");
+    Route::delete('student/{student} ', [UserController::class, "destroyStudent"])->name("destroy.student");
+    Route::put('student/{student}', [UserController::class, "updateStudent"])->name("update.student");
 
     // Staffs
     Route::get('staffs', [UserController::class, "getStaffs"])->name("get.staffs");
@@ -53,27 +54,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('save/staff', [UserController::class, "saveStaff"])->name("save.staff");
 
     // // feedback
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
+    Route::get('user', [UserController::class, "getUsers"])->name("get.users");
+    Route::get('user/{user}/edit', [UserController::class, "editUser"])->name("edit.user");
+    Route::delete('user/{user} ', [UserController::class, "destroyUser"])->name("destroy.user");
+    Route::put('user/{user}', [UserController::class, "updateUser"])->name("update.user");
 
-    // // Message
-    // Route::resource('message', MessageController::class);
-
-    // // Callback
-    // Route::resource('callback', CallbackController::class);
-
-    // // Schedule
-    // Route::resource('schedule', ScheduleController::class);
-
-    // // Content
-    // Route::resource('content', ContentController::class);
-
-    // // Content
-    // Route::resource('connect', ConnectController::class);
-
-    // profile
-    // Route::get('profile', [ProfileController::class, 'profile'])->name('profile');
-    // Route::get('profile/account', [ProfileController::class, 'account'])->name('profile.account');
-    // Route::post('update/profile', [ProfileController::class, 'update_profile'])->name('profile.update');
-    // Route::post('update/password', [ProfileController::class, 'update_password'])->name('profile.password.update');
-    // Route::get('profile/security', [ProfileController::class, 'security'])->name('profile.security');
+    Route::post('save/user', [UserController::class, "saveUser"])->name("save.user");
 });

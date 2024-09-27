@@ -14,12 +14,14 @@
                     </h4>
                 </div>
                 <div class="d-flex gap-3 align-items-center">
-                    <button class="btn btn-primary d-flex align-items-center justify-content-center" type="button"
-                        data-bs-toggle="modal" data-bs-target="#rfid" style="height: 40px; width: 100%; font-size: 14px;">
-                        <i class="bx bx-plus-medical" style="font-size: 18px; margin-right:20px;"></i>
-                        <span class="d-sm-none d-none d-lg-inline">Assign UUID To Student</span>
+                    <!-- Second Button -->
+                    <button class="btn btn-primary d-flex align-items-center justify-content-center btn-md" type="button"
+                        data-bs-toggle="modal" data-bs-target="#student">
+                        <i class="bx bx-plus-medical btn-icon"></i>
+                        <span class="d-sm-none d-none d-lg-inline">Add Student</span>
                     </button>
                 </div>
+
             </div>
         </div>
 
@@ -57,6 +59,7 @@
                             <th>Index No</th>
                             <th>UUID</th>
                             <th>Created At</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,8 +69,18 @@
                                 <td>{{ $student->email }}</td>
                                 <td>{{ $student->msisdn }}</td>
                                 <td>{{ $student->index_no }}</td>
-                                <td>{{ $student->uuid }}</td>
+                                <td>{{ $student->uuid->uuid ?? 'N/A' }}</td>
                                 <td>{{ $student->created_at }}</td>
+                                <td class="d-flex justify-content-start align-items-start">
+                                    <a href="{{ route('edit.student', $student->id) }}" class="me-2 text-warning">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{{ route('destroy.student', $student->id) }}" class="text-danger"
+                                        onclick="deleteStudent({{ $student->id }})" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -77,50 +90,49 @@
     </div>
 
     {{-- GET STARTED MODAL TO EITHER SELECT THE SMS OR USSD SURVEY --}}
-    <div class="modal fade" id="rfid" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="student" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
             <div class="modal-content p-3 p-md-5">
                 <div class="modal-body">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="text-center mb-4">
-                        <h3 class="address-title">Assign RFID to student</h3>
-
+                        <h3 class="address-title">Add new student</h3>
+                        <p class="address-subtitle">
+                            Type in the new student data and click proceed to add to database
+                        </p>
                     </div>
                     <form id="addNewAddressForm" class="row g-3" method="POST" action="{{ route('save.student') }}">
                         @csrf
                         <div class="col-12">
                             <div class="row">
                                 <div class="mb-3">
-                                    <label for="rfid" class="form-label">Unassigned Students</label>
-                                    <select class="form-control @error('code_id') is-invalid @enderror" id="rfid"
-                                        name="full_name" aria-describedby="rfidHelp">
-                                        <option value="" disabled selected>Select student</option>
-                                        @foreach ($unassigned as $unassign)
-                                            <option value="{{ $unassign->full_name }}">
-                                                {{ $unassign->full_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('full_name')
-                                        <div id="rfidHelp" class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="{{ old('email') }}" placeholder="Enter your email here" />
                                 </div>
-
+                                <div class="mb-3">
+                                    <label for="full_name" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="full_name" name="full_name"
+                                        value="{{ old('full_name') }}" placeholder="Enter your full name here" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="msisdn" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="msisdn" name="msisdn"
+                                        value="{{ old('msisdn') }}" placeholder="Enter your phone number here" />
+                                </div>
                                 <div class="mb-3">
                                     <label for="rfid" class="form-label">Available RFIDs</label>
                                     <select class="form-control @error('code_id') is-invalid @enderror" id="rfid"
-                                        name="uuid" aria-describedby="rfidHelp">
+                                        name="code_id" aria-describedby="rfidHelp">
                                         <option value="" disabled selected>Select RFID and assign to staff</option>
                                         @foreach ($codes as $code)
-                                            <option value="{{ $code->uuid }}"
-                                                {{ old('uuid') == $code->uuid ? 'selected' : '' }}>
+                                            <option value="{{ $code->id }}"
+                                                {{ old('code_id') == $code->id ? 'selected' : '' }}>
                                                 {{ $code->uuid }}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @error('uuid')
+                                    @error('code_id')
                                         <div id="rfidHelp" class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -140,6 +152,36 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Danger Header Modal -->
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="" method="POST" id="deleteStudent">
+                @csrf
+                @method('DELETE')
+
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <h4 class="modal-title" id="danger-header-modalLabel">Confirm Delete</h4>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-hidden="true"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p class="text-bold">
+                            Are you sure you want to delete this record ?
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
