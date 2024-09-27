@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('msisdn')->nullable();
             $table->string('full_name')->nullable();
-            $table->string('user_type')->default('student');
+            $table->string('user_type')->nullable();
             $table->string('code_id')->nullable();
             $table->string('index_no')->nullable();
             $table->timestamps();
